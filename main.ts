@@ -63,13 +63,23 @@ namespace wifiBoard {
     }
 
     /**
-     * SSIDとパスワードを一時記憶してWiFiに接続します。
+     * SSIDとパスワードを個別に設定し、WiFiに接続(APC)します。
      */
     //% group="WiFi設定"
     //% block="WiFiに接続 SSID:$ssid パスワード:$pwd"
     //% weight=80
     export function connectWiFi(ssid: string, pwd: string): void {
-        serial.writeLine("APC " + ssid + " " + pwd);
+        // 1. SSIDの設定
+        serial.writeLine("SETSSID " + ssid);
+        basic.pause(200);
+        
+        // 2. パスワードの設定
+        serial.writeLine("SETPWD " + pwd);
+        basic.pause(200);
+        
+        // 3. 接続実行
+        serial.writeLine("APC");
+        basic.pause(500);
     }
 
     /**
@@ -80,7 +90,7 @@ namespace wifiBoard {
     //% weight=70
     export function isConnected(): boolean {
         serial.writeLine("APS");
-        basic.pause(50);
+        basic.pause(100);
         let res = serial.readString();
         return res.includes("1");
     }
@@ -103,7 +113,7 @@ namespace wifiBoard {
     //% weight=55
     export function getMac(): string {
         serial.writeLine("MAC");
-        basic.pause(50);
+        basic.pause(100);
         return serial.readUntil("\n").replace("'", "").trim();
     }
 
