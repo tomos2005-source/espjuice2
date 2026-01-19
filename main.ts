@@ -21,6 +21,7 @@ namespace wifiBoard {
         Dist
     }
 
+
     /**
      * 指定したセンサーの値を文字列で取得します。
      */
